@@ -1,5 +1,6 @@
 package com.furkanekiz.roomdemo
 
+import android.util.Patterns
 import androidx.lifecycle.*
 import com.furkanekiz.roomdemo.db.Subscriber
 import com.furkanekiz.roomdemo.db.SubscriberRepository
@@ -28,12 +29,24 @@ class SubscriberViewModel(private val repository: SubscriberRepository) : ViewMo
     }
 
     fun saveOrUpdate() {
-        if (isUpdateOrDelete) {
-            subscriberToUpdateOrDelete.name = inputName.value!!
-            subscriberToUpdateOrDelete.email = inputEmail.value!!
-            update(subscriberToUpdateOrDelete)
-        } else {
-            if (inputName.value != null && inputEmail.value != null) {
+
+        if (inputName.value != null && inputEmail.value != null) {
+            if (!Patterns.EMAIL_ADDRESS.matcher(inputEmail.value!!).matches()) {
+                statusMessage.value = Event("Please Enter A Correct Email Address")
+            } else if (isUpdateOrDelete) {
+                subscriberToUpdateOrDelete.name = inputName.value!!
+                subscriberToUpdateOrDelete.email = inputEmail.value!!
+                if (subscriberToUpdateOrDelete.name.isNotEmpty() && subscriberToUpdateOrDelete.email.isNotEmpty()) {
+                    if (!Patterns.EMAIL_ADDRESS.matcher(inputEmail.value!!).matches()) {
+                        statusMessage.value = Event("Please Enter A Correct Email Address")
+                    } else {
+                        update(subscriberToUpdateOrDelete)
+                    }
+                } else {
+                    statusMessage.value = Event("Please Enter Name And Email")
+                }
+
+            } else {
                 val name = inputName.value!!
                 val email = inputEmail.value!!
 
@@ -41,11 +54,11 @@ class SubscriberViewModel(private val repository: SubscriberRepository) : ViewMo
 
                 inputName.value = null
                 inputEmail.value = null
-            } else {
-                statusMessage.value = Event("Please Enter Name And Email")
             }
-
+        } else {
+            statusMessage.value = Event("Please Enter Name And Email")
         }
+
 
     }
 
