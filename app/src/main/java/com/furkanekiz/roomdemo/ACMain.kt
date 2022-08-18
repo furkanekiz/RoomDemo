@@ -34,9 +34,9 @@ class ACMain : AppCompatActivity() {
 
         initRecyclerView()
 
-        subscriberViewModel.message.observe(this){ event ->
+        subscriberViewModel.message.observe(this) { event ->
             event.getContentIfNotHandled()?.let {
-                Toast.makeText(this,it,Toast.LENGTH_LONG).show()
+                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
             }
         }
     }

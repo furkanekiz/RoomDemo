@@ -6,9 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.furkanekiz.roomdemo.databinding.ListItemBinding
 import com.furkanekiz.roomdemo.db.Subscriber
 
-class MyRecyclerViewAdapter(private val subscriberList: List<Subscriber>, private val clickListener :(Subscriber)->Unit): RecyclerView.Adapter<MyViewHolder>() {
+class MyRecyclerViewAdapter(
+    private val subscriberList: List<Subscriber>,
+    private val clickListener: (Subscriber) -> Unit
+) : RecyclerView.Adapter<MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val binding = ListItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val binding = ListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyViewHolder(binding)
     }
 
@@ -19,11 +22,10 @@ class MyRecyclerViewAdapter(private val subscriberList: List<Subscriber>, privat
     override fun getItemCount(): Int {
         return subscriberList.size
     }
-
 }
 
 class MyViewHolder(private val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(subscriber: Subscriber, clickListener :(Subscriber)->Unit) {
+    fun bind(subscriber: Subscriber, clickListener: (Subscriber) -> Unit) {
         binding.tvName.text = subscriber.name
         binding.tvEmail.text = subscriber.email
         binding.listItemLayout.setOnClickListener {
