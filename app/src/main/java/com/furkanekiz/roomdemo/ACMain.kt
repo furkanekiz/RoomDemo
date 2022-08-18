@@ -1,5 +1,6 @@
 package com.furkanekiz.roomdemo
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +17,7 @@ class ACMain : AppCompatActivity() {
 
     private lateinit var binding: AcMainBinding
     private lateinit var subscriberViewModel: SubscriberViewModel
+    private lateinit var adapter: MyRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,18 +45,24 @@ class ACMain : AppCompatActivity() {
 
     private fun initRecyclerView() {
         binding.rvSubscriber.layoutManager = LinearLayoutManager(this)
+
+        adapter = MyRecyclerViewAdapter { selectedItem: Subscriber ->
+            listItemClicked(
+                selectedItem
+            )
+        }
+        binding.rvSubscriber.adapter = adapter
+
         displaySubscribersList()
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun displaySubscribersList() {
         subscriberViewModel.getSaveSubscribers().observe(this) {
             Log.i("MyTag", it.toString())
-            binding.rvSubscriber.adapter = MyRecyclerViewAdapter(it) { selectedItem: Subscriber ->
-                listItemClicked(
-                    selectedItem
-                )
-            }
+            adapter.setList(it)
+            adapter.notifyDataSetChanged()
         }
     }
 
